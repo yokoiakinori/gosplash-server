@@ -1,0 +1,2 @@
+# gosplash-server
+gosplashのサーバーリポジトリです。
