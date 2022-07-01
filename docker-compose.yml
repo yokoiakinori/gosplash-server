@@ -8,3 +8,12 @@ services:
     restart: always
     ports:
       - 8000:80000
+    volumes:
+      - ./app:/go/src/app
+  nginx:
+    container_name: gosplash_nginx
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+    ports:
+      - 80:80
