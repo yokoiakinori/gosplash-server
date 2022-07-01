@@ -4,7 +4,7 @@ services:
     container_name: gosplash_app
     build:
       context: .
-      dockerfile: .docker/app/Dockerfile
+      dockerfile: ./.docker/app/Dockerfile
     restart: always
     ports:
       - 8000:80000
@@ -14,6 +14,13 @@ services:
     container_name: gosplash_nginx
     build:
       context: .
-      dockerfile: .docker/nginx/Dockerfile
+      dockerfile: ./.docker/nginx/Dockerfile
     ports:
       - 80:80
+  mysql:
+    container_name: gosplash_mysql
+    build:
+      context: .
+      dockerfile: ./.docker/mysql/Dockerfile
+    ports:
+      - 3306:3306
