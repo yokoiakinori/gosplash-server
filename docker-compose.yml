@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  app:
+    container_name: gosplash_app
+    build:
+      context: .
+      dockerfile: .docker/app/Dockerfile
+    restart: always
+    ports:
+      - 8000:80000
