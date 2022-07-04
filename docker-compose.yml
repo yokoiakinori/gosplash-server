@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: ./.docker/app/Dockerfile
     restart: always
+    tty: true
     ports:
       - 8000:8000
     volumes:
