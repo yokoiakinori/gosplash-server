@@ -5,7 +5,11 @@ import (
 )
 
 type Router interface {
-	
+	HandleTodosRequest(w http.ResponseWriter, r *http.Request)
+}
+
+type router struct {
+	todoController TodoController
 }
 
 func NewRouter(todoController TodoController) Router {
