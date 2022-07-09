@@ -2,8 +2,12 @@ package main
 
 import (
 	"net/http"
-	"fmt"
+
+	"github.com/yokoiakinori/gosplash-server/app/controller"
+	"github.com/yokoiakinori/gosplash-server/app/model/repository"
 )
+
+var todoRepository = repository.NewTodoRepository()
 
 func main() {
 	server := http.Server{
