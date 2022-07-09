@@ -8,7 +8,7 @@ stop:
 down:
 	docker-compose down
 app:
-	docker exec -it $(project)_app /bin/bash
+	docker-compose exec app sh
 nginx:
 	docker exec -it $(project)_nginx /bin/bash
 mysql:
