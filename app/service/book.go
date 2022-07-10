@@ -1,7 +1,7 @@
 package service
 
 import (
-	"app/model"
+	"gosplash-server/app/model"
 )
 
 type BookService struct {
@@ -34,6 +34,7 @@ func (BookService) UpdateBook(newBook *model.Book) error {
 }
 
 func (BookService) DeleteBook(id int) error {
+	book := new(model.Book)
 	_, err := DbEngine.Id(id).Delete(book)
 	if err != nil {
 		return err

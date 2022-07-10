@@ -1,11 +1,13 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
-	"app/model"
-	"app/service"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+
+	"gosplash-server/app/model"
+	"gosplash-server/app/service"
 )
 
 func BookAdd(c *gin.Context) {
