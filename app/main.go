@@ -13,14 +13,11 @@ func main() {
 	
 	router.Use(middleware.RecordUaAndTime)
 
-	bookRouter := router.Group("/book")
+	v1 := router.Group("/v1")
 	{
-		v1 := bookRouter.Group("/v1")
+		user := v1.Group("/users")
 		{
-			v1.POST("/", controller.BookAdd)
-			v1.GET("/", controller.BookList)
-			v1.PUT("/", controller.BookUpdate)
-			v1.DELETE("/", controller.BookDelete)
+			user.POST("/register", controller.Register)
 		}
 	}
 
