@@ -33,3 +33,23 @@ func Register(c *gin.Context) {
 		"status": "ok",
 	})
 }
+
+func Login(c *gin.Context) {
+	user := model.User{}
+	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+		return
+	}
+
+	userService := service.UserService{}
+	err = userService.Login(c.PostForm("email"), c.PostForm("password"))
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+	})
+}
