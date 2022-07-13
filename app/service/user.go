@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"gosplash-server/app/model"
 )
 
@@ -18,10 +20,9 @@ func (UserService) Register(user *model.User) error {
 
 func (UserService) Login(email string, password string) error {
 	user := model.User{}
-	_, err := DbEngine.Where("email", email).Get(&user)
-	if user.Password !== password {
-		err = "パスワードが正しくありません。"
-		return err
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if user.Password != password {
+		err = errors.New("パスワードが一致しません。")
 	}
 	
 	if err != nil {
