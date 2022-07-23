@@ -43,13 +43,18 @@ func Login(c *gin.Context) {
 	}
 
 	userService := service.UserService{}
-	err = userService.Login(c.PostForm("email"), c.PostForm("password"))
+	token, err = userService.Login(c.PostForm("email"), c.PostForm("password"))
 	if err != nil {
+		if err == "unmatchedPassword" {
+			c.String(http.StatusBadRequest, "パスワードが一致しません。")
+			return
+		}
+		
 		c.String(http.StatusInternalServerError, "Server Error")
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
 }

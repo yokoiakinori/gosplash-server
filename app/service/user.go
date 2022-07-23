@@ -18,15 +18,17 @@ func (UserService) Register(user *model.User) error {
 	return nil
 }
 
-func (UserService) Login(email string, password string) error {
+func (UserService) Login(email string, password string) *model.AccessToken, error {
 	user := model.User{}
 	_, err := DbEngine.Where("email = ?", email).Get(&user)
 	if user.Password != password {
-		err = errors.New("パスワードが一致しません。")
+		err = errors.New("unmatchedPassword")
 	}
 	
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	token, err := DbEngine.Table("access_token").Insert(user)
+	return token, nil
 }
