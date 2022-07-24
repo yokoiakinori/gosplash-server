@@ -1,12 +1,12 @@
 package service
 
 import (
-	"errors"
+	"net/http"
 
 	"gosplash-server/app/model"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
-    "github.com/gin-contrib/sessions/cookie"
 )
 
 type UserService struct {
@@ -21,7 +21,7 @@ func (UserService) Register(user *model.User) error {
 	return nil
 }
 
-func (UserService) Login(c *gin.Context) error {
+func (UserService) Login(c *gin.Context) {
 	user := model.User{}
 	email := c.PostForm("email")
 	password := c.PostForm("password")
@@ -33,11 +33,16 @@ func (UserService) Login(c *gin.Context) error {
 	}
 	
 	if err != nil {
-		return err
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
 	}
 
 	session := sessions.Default(c)
 	session.Set("loginUser", email)
 	session.Save()
-	return nil
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ログイン完了",
+	})
+	return
 }

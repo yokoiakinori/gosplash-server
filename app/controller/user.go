@@ -43,13 +43,5 @@ func Login(c *gin.Context) {
 	}
 
 	userService := service.UserService{}
-	err = userService.Login(c)
-	if err != nil {
-		c.String(http.StatusInternalServerError, "Server Error")
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status": "ログイン完了",
-	})
+	userService.Login(c)
 }
