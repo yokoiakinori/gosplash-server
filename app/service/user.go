@@ -46,3 +46,14 @@ func (UserService) Login(c *gin.Context) {
 	})
 	return
 }
+
+func (UserService) Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear
+	session.Save()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ログアウトしました。",
+	})
+	return
+}

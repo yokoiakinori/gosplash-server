@@ -22,8 +22,11 @@ func main() {
 	{
 		user := v1.Group("/users")
 		{
-			user.POST("/register", controller.Register)
-			user.POST("/login", controller.Login)
+			userController = controller.User{}
+			user.POST("/register", userController.Register)
+			user.POST("/login", userController.Login)
+			user.POST("/logout", userController.Logout)
+			user.GET("/:id", userController.Logout)
 		}
 	}
 

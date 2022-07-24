@@ -9,6 +9,10 @@ import (
 	"gosplash-server/app/service"
 )
 
+type User struct {
+
+}
+
 func Register(c *gin.Context) {
 	user := model.User{}
 	err := c.Bind(&user)
@@ -44,4 +48,16 @@ func Login(c *gin.Context) {
 
 	userService := service.UserService{}
 	userService.Login(c)
+}
+
+func Logout(c *gin.Context) {
+	user := model.User{}
+	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+		return
+	}
+
+	userService := service.UserService{}
+	userService.Logout(c)
 }
