@@ -4,6 +4,9 @@ import (
 	"errors"
 
 	"gosplash-server/app/model"
+
+	"github.com/gin-contrib/sessions"
+    "github.com/gin-contrib/sessions/cookie"
 )
 
 type UserService struct {
@@ -18,17 +21,23 @@ func (UserService) Register(user *model.User) error {
 	return nil
 }
 
-func (UserService) Login(email string, password string) *model.AccessToken, error {
+func (UserService) Login(c *gin.Context) error {
 	user := model.User{}
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+
 	_, err := DbEngine.Where("email = ?", email).Get(&user)
 	if user.Password != password {
-		err = errors.New("unmatchedPassword")
+		c.String(http.StatusBadRequest, "パスワードが一致しません。")
+		return
 	}
 	
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	token, err := DbEngine.Table("access_token").Insert(user)
-	return token, nil
+	session := sessions.Default(c)
+	session.Set("loginUser", email)
+	session.Save()
+	return nil
 }

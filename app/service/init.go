@@ -40,7 +40,6 @@ func init() {
 	DbEngine.Sync2(
 		new(model.Book), 
 		new(model.User),
-		new(model.AccessToken),
 	)
 	fmt.Println("init data base ok")
 }
