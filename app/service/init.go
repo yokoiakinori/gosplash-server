@@ -37,6 +37,9 @@ func init() {
 	}
 	DbEngine.ShowSQL(true)
 	DbEngine.SetMaxOpenConns(2)
-	DbEngine.Sync2(new(model.Book), new(model.User))
+	DbEngine.Sync2(
+		new(model.Book), 
+		new(model.User),
+	)
 	fmt.Println("init data base ok")
 }
