@@ -22,11 +22,21 @@ func main() {
 	{
 		user := v1.Group("/users")
 		{
-			userController = controller.User{}
+			userController := controller.User{}
 			user.POST("/register", userController.Register)
 			user.POST("/login", userController.Login)
 			user.POST("/logout", userController.Logout)
-			user.GET("/:id", userController.Logout)
+		}
+
+		// ユーザー認証必要なルート
+		auth := v1.Group("")
+		auth.Use(middleware.LoginCheck())
+		{
+			user := auth.Group("/users")
+			{
+				userController := controller.User{}
+				user.GET("/me", userController.GetMyInfo)
+			}
 		}
 	}
 

@@ -13,7 +13,7 @@ type User struct {
 
 }
 
-func Register(c *gin.Context) {
+func (User) Register(c *gin.Context) {
 	user := model.User{}
 	err := c.Bind(&user)
 	if err != nil {
@@ -38,7 +38,7 @@ func Register(c *gin.Context) {
 	})
 }
 
-func Login(c *gin.Context) {
+func (User) Login(c *gin.Context) {
 	user := model.User{}
 	err := c.Bind(&user)
 	if err != nil {
@@ -50,7 +50,7 @@ func Login(c *gin.Context) {
 	userService.Login(c)
 }
 
-func Logout(c *gin.Context) {
+func (User) Logout(c *gin.Context) {
 	user := model.User{}
 	err := c.Bind(&user)
 	if err != nil {
@@ -60,4 +60,16 @@ func Logout(c *gin.Context) {
 
 	userService := service.UserService{}
 	userService.Logout(c)
+}
+
+func (User) GetMyInfo(c *gin.Context) {
+	user := model.User{}
+	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+		return
+	}
+
+	userService := service.UserService{}
+	userService.GetMyInfo(c)
 }
