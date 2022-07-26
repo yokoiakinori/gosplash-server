@@ -36,6 +36,7 @@ func main() {
 			{
 				userController := controller.User{}
 				user.GET("/me", userController.GetMyInfo)
+				user.PUT("/:id", userController.UpdateProfile)
 			}
 		}
 	}

@@ -88,3 +88,23 @@ func (UserService) GetMyInfo(c *gin.Context) {
 	})
 	return
 }
+
+func (UserService) UpdateProfile(c *gin.Context) {
+	userId := c.Param("id")
+
+	user := model.User {
+		Name: c.PostForm("name"),
+		Description: c.PostForm("description"),
+	}
+
+	_, err := DbEngine.Where("id = ?", userId).Update(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
