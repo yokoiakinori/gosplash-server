@@ -22,7 +22,7 @@ func (User) Register(c *gin.Context) {
 	}
 
 	userService := service.UserService{}
-	userService.Register(&user)
+	userService.Register(c)
 }
 
 func (User) Login(c *gin.Context) {
@@ -59,4 +59,16 @@ func (User) GetMyInfo(c *gin.Context) {
 
 	userService := service.UserService{}
 	userService.GetMyInfo(c)
+}
+
+func (User) UpdateProfile(c *gin.Context) {
+	user := model.User{}
+	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+		return
+	}
+
+	userService := service.UserService{}
+	userService.UpdateProfile(c)
 }
