@@ -21,21 +21,8 @@ func (User) Register(c *gin.Context) {
 		return
 	}
 
-	if c.PostForm("password") != c.PostForm("password_confirmation") {
-		c.String(http.StatusUnprocessableEntity, "パスワードと確認用パスワードが一致しません。")
-		return
-	}
-
 	userService := service.UserService{}
-	err = userService.Register(&user)
-	if err != nil {
-		c.String(http.StatusInternalServerError, "Server Error")
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{
-		"status": "ok",
-	})
+	userService.Register(&user)
 }
 
 func (User) Login(c *gin.Context) {

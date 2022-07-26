@@ -13,12 +13,23 @@ type UserService struct {
 	
 }
 
-func (UserService) Register(user *model.User) error {
+func (UserService) Register(c *gin.Context) {
+	user := model.User{}
+	if c.PostForm("password") != c.PostForm("password_confirmation") {
+		c.String(http.StatusUnprocessableEntity, "パスワードと確認用パスワードが一致しません。")
+		return
+	}
+
 	_, err := DbEngine.Insert(user)
 	if err != nil {
-		return err
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
 	}
-	return nil
+
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+	})
+	return
 }
 
 func (UserService) Login(c *gin.Context) {
