@@ -65,7 +65,7 @@ func main() {
 		image := v1.Group("/images")
 		{
 			image.POST("/upload", func(c *gin.Context){
-				randomStr, err := helper.MakeRandomStr(10)
+				randomStr, err := helper.MakeFilePath("icon")
 				if err != nil {
 					c.String(http.StatusInternalServerError, "エラー")
 				}
