@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions/cookie"
@@ -46,27 +47,8 @@ func newS3() (*s3.S3, error) {
 }
 
 func main() {
-	var filePath = "./androidparty.png"
 	var bucket = os.Getenv("MINIO_DEFAULT_BUCKETS")
-	var key = "sample"
-	imageFile, imageErr := os.Open(filePath)
-	if imageErr != nil {
-		panic(imageErr)
-	}
-	defer imageFile.Close()
-	c, err := newS3()
-	if err != nil {
-		panic(err)
-	}
-	params := &s3.PutObjectInput {
-		Bucket: aws.String(bucket),
-		Key: aws.String(key),
-		Body: imageFile,
-	}
-	_, err = c.PutObject(params)
-	if err != nil {
-		panic(err)
-	}
+	var key = "sample.png"
 
 	router := gin.Default()
 	
@@ -74,9 +56,32 @@ func main() {
 	router.Use(sessions.Sessions("mysession", store))
 
 	router.Use(middleware.RecordUaAndTime)
+	router.MaxMultipartMemory = 8 << 20
 
 	v1 := router.Group("/v1")
 	{
+		image := v1.Group("/images")
+		{
+			image.POST("/upload", func(c *gin.Context){
+				fileHeader, _ := c.FormFile("file")
+				log.Println(fileHeader.Filename)
+				file, _ := fileHeader.Open()
+
+				s3Session, err := newS3()
+				if err != nil {
+					log.Println(err)
+				}
+				params := &s3.PutObjectInput {
+					Bucket: aws.String(bucket),
+					Key: aws.String(key),
+					Body: file,
+				}
+				_, err = s3Session.PutObject(params)
+				if err != nil {
+					log.Println(err)
+				}
+			})
+		}
 		user := v1.Group("/users")
 		{
 			userController := controller.User{}
