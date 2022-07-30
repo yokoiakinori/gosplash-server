@@ -3,7 +3,8 @@ package main
 import (
 	"os"
 	"fmt"
-	"log"
+	"net/http"
+	// "log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions/cookie"
@@ -17,6 +18,7 @@ import (
 
 	"gosplash-server/app/controller"
 	"gosplash-server/app/middleware"
+	"gosplash-server/app/helper"
 )
 
 func loadEnv() {
@@ -47,8 +49,8 @@ func newS3() (*s3.S3, error) {
 }
 
 func main() {
-	var bucket = os.Getenv("MINIO_DEFAULT_BUCKETS")
-	var key = "sample.png"
+	// var bucket = os.Getenv("MINIO_DEFAULT_BUCKETS")
+	// var key = "sample.png"
 
 	router := gin.Default()
 	
@@ -63,23 +65,30 @@ func main() {
 		image := v1.Group("/images")
 		{
 			image.POST("/upload", func(c *gin.Context){
-				fileHeader, _ := c.FormFile("file")
-				log.Println(fileHeader.Filename)
-				file, _ := fileHeader.Open()
+				randomStr, err := helper.MakeRandomStr(10)
+				if err != nil {
+					c.String(http.StatusInternalServerError, "エラー")
+				}
+				c.JSON(http.StatusCreated, gin.H{
+					"randomStr": randomStr,
+				})
+				// fileHeader, _ := c.FormFile("file")
+				// log.Println(fileHeader.Filename)
+				// file, _ := fileHeader.Open()
 
-				s3Session, err := newS3()
-				if err != nil {
-					log.Println(err)
-				}
-				params := &s3.PutObjectInput {
-					Bucket: aws.String(bucket),
-					Key: aws.String(key),
-					Body: file,
-				}
-				_, err = s3Session.PutObject(params)
-				if err != nil {
-					log.Println(err)
-				}
+				// s3Session, err := newS3()
+				// if err != nil {
+				// 	log.Println(err)
+				// }
+				// params := &s3.PutObjectInput {
+				// 	Bucket: aws.String(bucket),
+				// 	Key: aws.String(key),
+				// 	Body: file,
+				// }
+				// _, err = s3Session.PutObject(params)
+				// if err != nil {
+				// 	log.Println(err)
+				// }
 			})
 		}
 		user := v1.Group("/users")
