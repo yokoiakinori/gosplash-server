@@ -109,23 +109,64 @@ func (UserService) UpdateProfile(c *gin.Context) {
 }
 
 func (UserService) UpdateIcon(c *gin.Context) {
+	DbEngine.Begin()
 	fileHeader, _ := c.FormFile("file")
 	fileName := fileHeader.Filename
+	user, _ := GetUserInfo(c)
+
+	_, err = deleteOldIconRecord(c, user.Id)
+	if err != nil {
+		DbEngine.Rollback()
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	icon, err = InsertIconRecord(c, fileName, user)
+	if err != nil {
+		DbEngine.Rollback()
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	file, _ := fileHeader.Open()
+	_, err = UploadFile(icon.Path, file)
+	if err != nil {
+		DbEngine.Rollback()
+		return
+	}
+
+	DbEngine.Commit()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
+func GetUserInfo(c *gin.Context) (User, error){
 	user := model.User{}
 	email, _ := c.Get("loginUser")
+	return DbEngine.Where("email = ?", email).Get(&user)
+}
 
-	_, err := DbEngine.Where("email = ?", email).Get(&user)
+func deleteOldIconRecord(c *gin.Context, userId int) (nil, error) {
+	icon := model.Icon{}
+	_, err := DbEngine.Where("user_id = ?", userId).Get(&icon)
+	if icon != nil {
+		DbEngine.Delete(icon)
+	}
+}
+
+func InsertIconRecord(c *gin.Context, fileName string, user User) (Icon, error) {
 	filePath, err := helper.MakeFilePath("icon", fileName)
 	icon := model.Icon {
 		Path: filePath,
 		UserId: user.Id,
 	}
-	_, err = DbEngine.Insert(&icon)
-	if err != nil {
-		c.String(http.StatusInternalServerError, "Server Error")
-		return
-	}
+	return DbEngine.Insert(&icon)
+}
 
+func UploadFile(filePath string, file File) (*PutObjectOutput, error) {
 	var bucket = os.Getenv("MINIO_DEFAULT_BUCKETS")
 	s3Session, err := newS3()
 	params := &s3.PutObjectInput {
@@ -133,10 +174,5 @@ func (UserService) UpdateIcon(c *gin.Context) {
 		Key: filePath,
 		Body: file,
 	}
-	_, err = s3Session.PutObject(params)
-
-	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
-	})
-	return
+	return s3Session.PutObject(params)
 }
