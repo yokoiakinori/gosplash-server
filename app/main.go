@@ -1,10 +1,7 @@
 package main
 
 import (
-	"os"
-	"fmt"
 	"net/http"
-	// "log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions/cookie"
@@ -13,14 +10,9 @@ import (
 
 	"gosplash-server/app/controller"
 	"gosplash-server/app/middleware"
-	"gosplash-server/app/helper"
-	"gosplash-server/app/setup"
 )
 
 func main() {
-	// var bucket = os.Getenv("MINIO_DEFAULT_BUCKETS")
-	// var key = "sample.png"
-
 	router := gin.Default()
 	
 	store := cookie.NewStore([]byte("secret"))
@@ -31,35 +23,6 @@ func main() {
 
 	v1 := router.Group("/v1")
 	{
-		image := v1.Group("/images")
-		{
-			image.POST("/upload", func(c *gin.Context){
-				randomStr, err := helper.MakeFilePath("icon")
-				if err != nil {
-					c.String(http.StatusInternalServerError, "エラー")
-				}
-				c.JSON(http.StatusCreated, gin.H{
-					"randomStr": randomStr,
-				})
-				// fileHeader, _ := c.FormFile("file")
-				// log.Println(fileHeader.Filename)
-				// file, _ := fileHeader.Open()
-
-				// s3Session, err := newS3()
-				// if err != nil {
-				// 	log.Println(err)
-				// }
-				// params := &s3.PutObjectInput {
-				// 	Bucket: aws.String(bucket),
-				// 	Key: aws.String(key),
-				// 	Body: file,
-				// }
-				// _, err = s3Session.PutObject(params)
-				// if err != nil {
-				// 	log.Println(err)
-				// }
-			})
-		}
 		user := v1.Group("/users")
 		{
 			userController := controller.User{}
@@ -75,8 +38,12 @@ func main() {
 			user := auth.Group("/users")
 			{
 				userController := controller.User{}
-				user.GET("/me", userController.GetMyInfo)
-				user.PUT("/:id", userController.UpdateProfile)
+				me := user.Group("/me")
+				{
+					me.GET("/", userController.GetMyInfo)
+					me.PUT("/", userController.UpdateProfile)
+					me.POST("/icon", userController.UpdateIcon)
+				}
 			}
 		}
 	}
