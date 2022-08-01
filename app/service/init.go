@@ -40,6 +40,7 @@ func init() {
 	DbEngine.Sync2(
 		new(model.Book), 
 		new(model.User),
+		new(model.Icon),
 	)
 	fmt.Println("init data base ok")
 }

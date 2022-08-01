@@ -72,3 +72,15 @@ func (User) UpdateProfile(c *gin.Context) {
 	userService := service.UserService{}
 	userService.UpdateProfile(c)
 }
+
+func (User) UpdateIcon(c *gin.Context) {
+	user := model.User{}
+	err := c.Bind(&user)
+	if err != nil {
+		c.String(http.StatusBadRequest, "Bad request")
+		return
+	}
+
+	userService := service.UserService{}
+	userService.UpdateIcon(c)
+}
