@@ -9,13 +9,13 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-func newS3() (*s3.S3, error) {
+func NewS3() (*s3.S3, error) {
 	s, err := session.NewSession()
 	if err != nil {
 		return nil, err
 	}
 
-	loadEnv()
+	LoadEnv()
 
 	ak := os.Getenv("AWS_ACCESS_KEY_ID")
 	sk := os.Getenv("AWS_SECRET_ACCESS_KEY")
