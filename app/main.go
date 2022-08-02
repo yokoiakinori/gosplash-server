@@ -43,6 +43,13 @@ func main() {
 					me.POST("/icon", userController.UpdateIcon)
 				}
 			}
+
+			friendship := auth.Group("/friendships")
+			{
+				friendshipController := controller.Friendship{}
+				friendship.POST("/:id", friendshipController.Follow)
+				friendship.DELETE("/:id", friendshipController.Follow)
+			}
 		}
 	}
 
