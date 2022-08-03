@@ -17,5 +17,5 @@ func (Friendship) Follow(c *gin.Context) {
 
 func (Friendship) Unfollow(c *gin.Context) {
 	friendshipService := service.FriendshipService{}
-	friendshipService.Follow(c)
+	friendshipService.Unfollow(c)
 }
