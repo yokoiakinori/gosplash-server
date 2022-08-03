@@ -41,6 +41,7 @@ func init() {
 		new(model.Book), 
 		new(model.User),
 		new(model.Icon),
+		new(model.Friendship),
 	)
 	fmt.Println("init data base ok")
 }
