@@ -64,3 +64,26 @@ func (FriendshipService) Unfollow(c *gin.Context) {
 	})
 	return
 }
+
+func (FriendshipService) GetFollowers(c *gin.Context) {
+	me := model.User{}
+	email, _ := c.Get("loginUser")
+	_, err := DbEngine.Where("email = ?", email).Get(&me)
+
+	users := []model.User{}
+	err = DbEngine.Table("user").
+	Join("INNER", "friendship", "user.id = friendship.applicant_id").
+	Where("authorizer_id = ?", me.Id).
+	Find(&users)
+
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+		"data": users,
+	})
+	return
+}

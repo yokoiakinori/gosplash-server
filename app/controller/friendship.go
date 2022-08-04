@@ -19,3 +19,8 @@ func (Friendship) Unfollow(c *gin.Context) {
 	friendshipService := service.FriendshipService{}
 	friendshipService.Unfollow(c)
 }
+
+func (Friendship) GetFollowers(c *gin.Context) {
+	friendshipService := service.FriendshipService{}
+	friendshipService.GetFollowers(c)
+}

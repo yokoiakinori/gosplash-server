@@ -49,6 +49,7 @@ func main() {
 				friendshipController := controller.Friendship{}
 				friendship.POST("/:id", friendshipController.Follow)
 				friendship.DELETE("/:id", friendshipController.Unfollow)
+				friendship.GET("/", friendshipController.GetFollowers)
 			}
 		}
 	}
