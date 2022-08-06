@@ -56,8 +56,8 @@ func main() {
 			{
 				postController := controller.Post{}
 				post.POST("/", postController.Store)
-				post.PUT("/:id", postController.Update)
-				post.DELETE("/:id", postController.Delete)
+				// post.PUT("/:id", postController.Update)
+				// post.DELETE("/:id", postController.Delete)
 			}
 		}
 	}
