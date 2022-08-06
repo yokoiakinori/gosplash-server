@@ -2,6 +2,7 @@ package service
 
 import (
 	"net/http"
+	"strconv"
 
 	"gosplash-server/app/model"
 	"gosplash-server/app/helper"
@@ -37,6 +38,24 @@ func (PostService) Store(c *gin.Context) {
 	}
 
 	session.Commit()
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
+func (PostService) Update(c *gin.Context) {
+	post := model.Post{
+		Name: c.PostForm("name"),
+		Description: c.PostForm("description"),
+	}
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	_, err := DbEngine.Where("id = ?", postId).Update(&post)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
