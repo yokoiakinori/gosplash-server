@@ -51,6 +51,14 @@ func main() {
 				friendship.DELETE("/:id", friendshipController.Unfollow)
 				friendship.GET("/", friendshipController.GetFollowers)
 			}
+
+			post := auth.Group("/posts")
+			{
+				postController := controller.Post{}
+				post.POST("/", postController.Store)
+				post.PUT("/:id", postController.Update)
+				post.DELETE("/:id", postController.Delete)
+			}
 		}
 	}
 
