@@ -33,6 +33,7 @@ func main() {
 		{
 			postController := controller.Post{}
 			post.GET("/", postController.GetAllPost)
+			post.GET("/:id", postController.GetPost)
 		}
 
 		// ユーザー認証必要なルート

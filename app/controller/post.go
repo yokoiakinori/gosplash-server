@@ -29,3 +29,8 @@ func (Post) GetAllPost(c *gin.Context) {
 	postService := service.PostService{}
 	postService.GetAllPost(c)
 }
+
+func (Post) GetPost(c *gin.Context) {
+	postService := service.PostService{}
+	postService.GetPost(c)
+}
