@@ -7,3 +7,7 @@ type Icon struct {
 	Created string `xorm:"timestamp created" form:"created" json:"created"`
 	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
 }
+
+type IconPath struct {
+	Path string `xorm:"varchar(60)" form:"path" json:"path"`
+}
