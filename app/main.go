@@ -29,6 +29,12 @@ func main() {
 			user.POST("/logout", userController.Logout)
 		}
 
+		post := v1.Group("/posts")
+		{
+			postController := controller.Post{}
+			post.GET("/", postController.GetAllPost)
+		}
+
 		// ユーザー認証必要なルート
 		auth := v1.Group("")
 		auth.Use(middleware.LoginCheck())

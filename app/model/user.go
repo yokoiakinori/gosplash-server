@@ -9,3 +9,8 @@ type User struct {
 	Created string `xorm:"timestamp created" form:"created" json:"created"`
 	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
 }
+
+type UserNameAndIcon struct {
+	Name string `xorm:"varchar(60)" form:"name" json:"name"`
+	Icon IconPath `xorm:"extends" from:"icon" json:"icon"`
+}

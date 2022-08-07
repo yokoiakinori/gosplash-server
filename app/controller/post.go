@@ -24,3 +24,8 @@ func (Post) Delete(c *gin.Context) {
 	postService := service.PostService{}
 	postService.Delete(c)
 }
+
+func (Post) GetAllPost(c *gin.Context) {
+	postService := service.PostService{}
+	postService.GetAllPost(c)
+}

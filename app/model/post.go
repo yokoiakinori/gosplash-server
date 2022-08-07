@@ -11,3 +11,12 @@ type Post struct {
 	Created string `xorm:"timestamp created" form:"created" json:"created"`
 	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
 }
+
+type PostListAndUser struct {
+	Id int64 `xorm:"pk autoincr int(64)" form:"id" json:"id"`
+	Name string `xorm:"not null" form:"name" json:"name"`
+	Path string `xorm:"varchar(60)" form:"path" json:"path"`
+	Created string `xorm:"timestamp created" form:"created" json:"created"`
+	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
+	User UserNameAndIcon `xorm:"extends" from:"user" json:"user"`
+}

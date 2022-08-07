@@ -94,6 +94,26 @@ func (PostService) Delete(c *gin.Context) {
 	return
 }
 
+func (PostService) GetAllPost(c *gin.Context) {
+	posts := []model.PostListAndUser{}
+	err := DbEngine.Table("post").
+	Join("INNER", "user", "user.id = post.user_id").
+	Join("INNER", "icon", "icon.user_id = post.user_id").
+	Find(&posts)
+
+	if err != nil {
+		panic(err)
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+		"data": posts,
+	})
+	return
+}
+
 func InsertPostRecord(c *gin.Context, fileName string, user model.User) (model.Post, error) {
 	filePath, err := helper.MakeFilePath("post", fileName)
 
