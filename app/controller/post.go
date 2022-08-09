@@ -34,3 +34,8 @@ func (Post) GetPost(c *gin.Context) {
 	postService := service.PostService{}
 	postService.GetPost(c)
 }
+
+func (Post) Like(c *gin.Context) {
+	postService := service.PostService{}
+	postService.Like(c)
+}
