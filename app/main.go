@@ -73,6 +73,12 @@ func main() {
 				like.POST("/:id", postController.Like)
 				like.DELETE("/:id", postController.Unlike)
 			}
+
+			comment := auth.Group("/comments")
+			{
+				postController := controller.Post{}
+				comment.POST("/:id", postController.StoreComment)
+			}
 		}
 	}
 

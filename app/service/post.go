@@ -186,6 +186,31 @@ func (PostService) Unlike(c *gin.Context) {
 	return
 }
 
+func (PostService) StoreComment(c *gin.Context) {
+	email, _ := c.Get("loginUser")
+
+	user := model.User {}
+
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	comment := model.Comment{
+		UserId: user.Id,
+		PostId: postId,
+		Content: c.PostForm("content"),
+	}
+	_, err = DbEngine.Insert(&comment)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
 func InsertPostRecord(c *gin.Context, fileName string, user model.User) (model.Post, error) {
 	filePath, err := helper.MakeFilePath("post", fileName)
 

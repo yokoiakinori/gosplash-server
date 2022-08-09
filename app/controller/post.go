@@ -44,3 +44,8 @@ func (Post) Unlike(c *gin.Context) {
 	postService := service.PostService{}
 	postService.Unlike(c)
 }
+
+func (Post) StoreComment(c *gin.Context) {
+	postService := service.PostService{}
+	postService.StoreComment(c)
+}
