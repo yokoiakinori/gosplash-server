@@ -71,6 +71,7 @@ func main() {
 			{
 				postController := controller.Post{}
 				like.POST("/:id", postController.Like)
+				like.DELETE("/:id", postController.Unlike)
 			}
 		}
 	}

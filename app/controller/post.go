@@ -39,3 +39,8 @@ func (Post) Like(c *gin.Context) {
 	postService := service.PostService{}
 	postService.Like(c)
 }
+
+func (Post) Unlike(c *gin.Context) {
+	postService := service.PostService{}
+	postService.Unlike(c)
+}
