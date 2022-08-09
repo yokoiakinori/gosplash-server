@@ -141,6 +141,51 @@ func (PostService) GetPost(c *gin.Context) {
 	return
 }
 
+func (PostService) Like(c *gin.Context) {
+	email, _ := c.Get("loginUser")
+
+	user := model.User {}
+
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	like := model.Like{
+		UserId: user.Id,
+		PostId: postId,
+	}
+	_, err = DbEngine.Insert(&like)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
+func (PostService) Unlike(c *gin.Context) {
+	email, _ := c.Get("loginUser")
+
+	user := model.User {}
+
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	like := model.Like {}
+	_, err = DbEngine.Where("user_id = ?", user.Id).And("post_id = ?", postId).Delete(&like)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
 func InsertPostRecord(c *gin.Context, fileName string, user model.User) (model.Post, error) {
 	filePath, err := helper.MakeFilePath("post", fileName)
 

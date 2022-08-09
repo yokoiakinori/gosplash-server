@@ -66,6 +66,13 @@ func main() {
 				post.PUT("/:id", postController.Update)
 				post.DELETE("/:id", postController.Delete)
 			}
+
+			like := auth.Group("/likes")
+			{
+				postController := controller.Post{}
+				like.POST("/:id", postController.Like)
+				like.DELETE("/:id", postController.Unlike)
+			}
 		}
 	}
 
