@@ -7,5 +7,4 @@ type Comment struct {
 	Content string `xorm:"varchar(255)" form:"content" json:"content"`
 	Created string `xorm:"timestamp created" form:"created" json:"created"`
 	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
-	Version int `xorm:"'version'" form:"updated" json:"updated"`
 }
