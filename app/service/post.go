@@ -242,6 +242,30 @@ func (PostService) DeleteComment(c *gin.Context) {
 	return
 }
 
+func (PostService) StoreCollection(c *gin.Context) {
+	email, _ := c.Get("loginUser")
+
+	user := model.User {}
+
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	comment := model.Collection{
+		UserId: user.Id,
+		PostId: postId,
+	}
+	_, err = DbEngine.Insert(&comment)
+
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
 func InsertPostRecord(c *gin.Context, fileName string, user model.User) (model.Post, error) {
 	filePath, err := helper.MakeFilePath("post", fileName)
 
