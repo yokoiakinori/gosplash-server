@@ -10,7 +10,7 @@ type Post struct {
 	DownloadCount int64 `xorm:"default 0" form:"download_count" json:"download_count"`
 	Created string `xorm:"timestamp created" form:"created" json:"created"`
 	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
-	Version int `xorm:"version"`
+	Version int `xorm:"'version'"`
 }
 
 type PostListAndUser struct {
@@ -31,5 +31,6 @@ type PostAndUser struct {
 	DownloadCount int64 `xorm:"default 0" form:"download_count" json:"download_count"`
 	Created string `xorm:"timestamp created" form:"created" json:"created"`
 	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
+	Version int `xorm:"'version'"`
 	User UserNameAndIcon `xorm:"extends" from:"user" json:"user"`
 }

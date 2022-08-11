@@ -63,7 +63,7 @@ func main() {
 			{
 				postController := controller.Post{}
 				post.POST("/", postController.Store)
-				post.PUT("/:id", postController.Update)
+				post.PATCH("/:id", postController.Update)
 				post.DELETE("/:id", postController.Delete)
 			}
 
@@ -72,6 +72,14 @@ func main() {
 				postController := controller.Post{}
 				like.POST("/:id", postController.Like)
 				like.DELETE("/:id", postController.Unlike)
+			}
+
+			comment := auth.Group("/comments")
+			{
+				postController := controller.Post{}
+				comment.POST("/:id", postController.StoreComment)
+				comment.PATCH("/:id", postController.UpdateComment)
+				comment.DELETE("/:id", postController.DeleteComment)
 			}
 		}
 	}
