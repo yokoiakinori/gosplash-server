@@ -54,3 +54,8 @@ func (Post) UpdateComment(c *gin.Context) {
 	postService := service.PostService{}
 	postService.UpdateComment(c)
 }
+
+func (Post) DeleteComment(c *gin.Context) {
+	postService := service.PostService{}
+	postService.DeleteComment(c)
+}

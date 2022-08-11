@@ -227,6 +227,21 @@ func (PostService) UpdateComment(c *gin.Context) {
 	return
 }
 
+func (PostService) DeleteComment(c *gin.Context) {
+	commentId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	comment := model.Comment{}
+	_, err := DbEngine.ID(commentId).Delete(&comment)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
 func InsertPostRecord(c *gin.Context, fileName string, user model.User) (model.Post, error) {
 	filePath, err := helper.MakeFilePath("post", fileName)
 

@@ -79,6 +79,7 @@ func main() {
 				postController := controller.Post{}
 				comment.POST("/:id", postController.StoreComment)
 				comment.PATCH("/:id", postController.UpdateComment)
+				comment.DELETE("/:id", postController.DeleteComment)
 			}
 		}
 	}
