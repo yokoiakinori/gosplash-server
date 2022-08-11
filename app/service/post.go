@@ -205,6 +205,22 @@ func (PostService) StoreComment(c *gin.Context) {
 	}
 	_, err = DbEngine.Insert(&comment)
 
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
+func (PostService) UpdateComment(c *gin.Context) {
+	commentId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	comment := model.Comment{}
+	comment.Content = c.PostForm("content")
+	_, err := DbEngine.ID(commentId).Update(&comment)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})

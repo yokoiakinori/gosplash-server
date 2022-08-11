@@ -63,7 +63,7 @@ func main() {
 			{
 				postController := controller.Post{}
 				post.POST("/", postController.Store)
-				post.PUT("/:id", postController.Update)
+				post.PATCH("/:id", postController.Update)
 				post.DELETE("/:id", postController.Delete)
 			}
 
@@ -78,6 +78,7 @@ func main() {
 			{
 				postController := controller.Post{}
 				comment.POST("/:id", postController.StoreComment)
+				comment.PATCH("/:id", postController.UpdateComment)
 			}
 		}
 	}

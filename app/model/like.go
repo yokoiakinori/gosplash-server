@@ -6,5 +6,5 @@ type Like struct {
 	PostId int64 `xorm:"not null" form:"post_id" json:"post_id"`
 	Created string `xorm:"timestamp created" form:"created" json:"created"`
 	Updated string `xorm:"timestamp updated" form:"updated" json:"updated"`
-	Version int `xorm:"version"`
+	Version int `xorm:"'version'"`
 }

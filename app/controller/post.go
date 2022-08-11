@@ -49,3 +49,8 @@ func (Post) StoreComment(c *gin.Context) {
 	postService := service.PostService{}
 	postService.StoreComment(c)
 }
+
+func (Post) UpdateComment(c *gin.Context) {
+	postService := service.PostService{}
+	postService.UpdateComment(c)
+}
