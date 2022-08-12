@@ -254,13 +254,34 @@ func (PostService) StoreCollection(c *gin.Context) {
 	}
 
 	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
-	comment := model.Collection{
+	collection := model.Collection{
 		UserId: user.Id,
 		PostId: postId,
 	}
-	_, err = DbEngine.Insert(&comment)
+	_, err = DbEngine.Insert(&collection)
 
 	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
+func (PostService) DeleteCollection(c *gin.Context) {
+	email, _ := c.Get("loginUser")
+
+	user := model.User {}
+
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	collection := model.Collection {}
+	_, err = DbEngine.Where("user_id = ?", user.Id).And("post_id = ?", postId).Delete(&collection)
+
+	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
 	return

@@ -86,6 +86,7 @@ func main() {
 			{
 				postController := controller.Post{}
 				collection.POST("/:id", postController.StoreCollection)
+				collection.DELETE("/:id", postController.DeleteCollection)
 			}
 		}
 	}

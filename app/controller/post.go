@@ -64,3 +64,8 @@ func (Post) StoreCollection(c *gin.Context) {
 	postService := service.PostService{}
 	postService.StoreCollection(c)
 }
+
+func (Post) DeleteCollection(c *gin.Context) {
+	postService := service.PostService{}
+	postService.DeleteCollection(c)
+}
