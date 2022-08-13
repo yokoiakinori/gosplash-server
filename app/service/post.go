@@ -242,6 +242,74 @@ func (PostService) DeleteComment(c *gin.Context) {
 	return
 }
 
+func (PostService) StoreCollection(c *gin.Context) {
+	email, _ := c.Get("loginUser")
+
+	user := model.User {}
+
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	collection := model.Collection{
+		UserId: user.Id,
+		PostId: postId,
+	}
+	_, err = DbEngine.Insert(&collection)
+
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
+func (PostService) DeleteCollection(c *gin.Context) {
+	email, _ := c.Get("loginUser")
+
+	user := model.User {}
+
+	_, err := DbEngine.Where("email = ?", email).Get(&user)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	postId, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	collection := model.Collection {}
+	_, err = DbEngine.Where("user_id = ?", user.Id).And("post_id = ?", postId).Delete(&collection)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+	return
+}
+
+func (PostService) GetCollections(c *gin.Context) {
+	me := model.User{}
+	email, _ := c.Get("loginUser")
+	_, err := DbEngine.Where("email = ?", email).Get(&me)
+
+	posts := []model.Post{}
+	err = DbEngine.Table("post").
+	Join("INNER", "collection", "post.id = collection.post_id").
+	Where("collection.user_id = ?", me.Id).
+	Find(&posts)
+
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+		"data": posts,
+	})
+	return
+}
+
 func InsertPostRecord(c *gin.Context, fileName string, user model.User) (model.Post, error) {
 	filePath, err := helper.MakeFilePath("post", fileName)
 

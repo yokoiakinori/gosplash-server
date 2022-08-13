@@ -81,6 +81,14 @@ func main() {
 				comment.PATCH("/:id", postController.UpdateComment)
 				comment.DELETE("/:id", postController.DeleteComment)
 			}
+
+			collection := auth.Group("/collections")
+			{
+				postController := controller.Post{}
+				collection.POST("/:id", postController.StoreCollection)
+				collection.DELETE("/:id", postController.DeleteCollection)
+				collection.GET("/", postController.GetCollections)
+			}
 		}
 	}
 
