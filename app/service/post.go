@@ -287,6 +287,29 @@ func (PostService) DeleteCollection(c *gin.Context) {
 	return
 }
 
+func (PostService) GetCollections(c *gin.Context) {
+	me := model.User{}
+	email, _ := c.Get("loginUser")
+	_, err := DbEngine.Where("email = ?", email).Get(&me)
+
+	posts := []model.Post{}
+	err = DbEngine.Table("post").
+	Join("INNER", "collection", "post.id = collection.post_id").
+	Where("collection.user_id = ?", me.Id).
+	Find(&posts)
+
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Server Error")
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"status": "ok",
+		"data": posts,
+	})
+	return
+}
+
 func InsertPostRecord(c *gin.Context, fileName string, user model.User) (model.Post, error) {
 	filePath, err := helper.MakeFilePath("post", fileName)
 
