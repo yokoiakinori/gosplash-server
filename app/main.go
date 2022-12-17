@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/sessions"
 	_ "github.com/go-sql-driver/mysql"
@@ -12,12 +13,30 @@ import (
 
 func main() {
 	router := gin.Default()
+
+	// CORSの設定
+	router.Use(cors.New(cors.Config{
+		AllowOrigins: []string{
+			"http://localhost:3000",
+		},
+		AllowMethods: []string{
+			"GET",
+			"POST",
+			"PUT",
+			"DELETE",
+		},
+		AllowHeaders: []string{
+			"Access-Control-Allow-Credentials",
+			"Access-Control-Allow-Headers",
+			"Content-Type",
+			"Content-Length",
+			"Accept-Encoding",
+			"Authorization",
+		},
+	}))
 	
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("mysession", store))
-
-	router.Use(middleware.RecordUaAndTime)
-	router.MaxMultipartMemory = 8 << 20
 
 	v1 := router.Group("/v1")
 	{
