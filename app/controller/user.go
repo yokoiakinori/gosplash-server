@@ -39,15 +39,19 @@ func (User) Register(c *gin.Context) {
 }
 
 func (User) Login(c *gin.Context) {
-	user := model.User{}
-	err := c.Bind(&user)
+	input := model.Login{}
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		c.String(http.StatusBadRequest, "Bad request")
 		return
 	}
 
 	userService := service.UserService{}
-	userService.Login(c)
+	userService.Login(&input, c)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ログイン完了",
+	})
 }
 
 func (User) Logout(c *gin.Context) {

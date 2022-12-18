@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions/cookie"
@@ -22,6 +24,7 @@ func main() {
 		AllowMethods: []string{
 			"GET",
 			"POST",
+			"OPTIONS",
 			"PUT",
 			"DELETE",
 		},
@@ -33,6 +36,8 @@ func main() {
 			"Accept-Encoding",
 			"Authorization",
 		},
+		AllowCredentials: true,
+		MaxAge: 12 * time.Hour,
 	}))
 	
 	store := cookie.NewStore([]byte("secret"))
@@ -40,35 +45,23 @@ func main() {
 
 	v1 := router.Group("/v1")
 	{
-		user := v1.Group("/users")
-		{
-			userController := controller.User{}
-			user.POST("/register", userController.Register)
-			user.POST("/login", userController.Login)
-			user.POST("/logout", userController.Logout)
-		}
+		userController := controller.User{}
+		v1.POST("/users/register", userController.Register)
+		v1.POST("/users/login", userController.Login)
+		v1.POST("/users/logout", userController.Logout)
 
-		post := v1.Group("/posts")
-		{
-			postController := controller.Post{}
-			post.GET("/", postController.GetAllPost)
-			post.GET("/:id", postController.GetPost)
-		}
+		postController := controller.Post{}
+		v1.GET("/posts", postController.GetAllPost)
+		v1.GET("/posts/:id", postController.GetPost)
 
 		// ユーザー認証必要なルート
 		auth := v1.Group("")
 		auth.Use(middleware.LoginCheck())
 		{
-			user := auth.Group("/users")
-			{
-				userController := controller.User{}
-				me := user.Group("/me")
-				{
-					me.GET("/", userController.GetMyInfo)
-					me.PUT("/", userController.UpdateProfile)
-					me.POST("/icon", userController.UpdateIcon)
-				}
-			}
+			userController := controller.User{}
+			auth.GET("/users/me", userController.GetMyInfo)
+			auth.PUT("/users/me", userController.UpdateProfile)
+			auth.POST("/users/me/icon", userController.UpdateIcon)
 
 			friendship := auth.Group("/friendships")
 			{

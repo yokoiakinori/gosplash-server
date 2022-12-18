@@ -16,6 +16,11 @@ type Register struct {
 	Password string `xorm:"varchar(255)" json:"password" json:"password"`
 }
 
+type Login struct {
+	Email string `xorm:"unique varchar(255)" json:"email" json:"email"`
+	Password string `xorm:"varchar(255)" json:"password" json:"password"`
+}
+
 type UserNameAndIcon struct {
 	Name string `xorm:"varchar(60)" form:"name" json:"name"`
 	Icon IconPath `xorm:"extends" from:"icon" json:"icon"`
