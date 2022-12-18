@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"log"
 
 	"github.com/gin-gonic/gin"
 
@@ -14,27 +15,43 @@ type User struct {
 }
 
 func (User) Register(c *gin.Context) {
-	user := model.User{}
-	err := c.Bind(&user)
+	input := model.Register{}
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		c.String(http.StatusBadRequest, "Bad request")
 		return
 	}
 
+	if c.PostForm("password") != c.PostForm("password_confirmation") {
+		c.JSON(http.StatusUnprocessableEntity, "パスワードと確認用パスワードが一致しません。")
+		return
+	}
+
 	userService := service.UserService{}
-	userService.Register(c)
+	err = userService.Register(&input)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "会員登録をしました。",
+	})
 }
 
 func (User) Login(c *gin.Context) {
-	user := model.User{}
-	err := c.Bind(&user)
+	input := model.Login{}
+	err := c.ShouldBindJSON(&input)
 	if err != nil {
 		c.String(http.StatusBadRequest, "Bad request")
 		return
 	}
 
 	userService := service.UserService{}
-	userService.Login(c)
+	userService.Login(&input, c)
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ログイン完了",
+	})
 }
 
 func (User) Logout(c *gin.Context) {
